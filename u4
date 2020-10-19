@@ -1,0 +1,49 @@
+A.
+軟體防火牆、封包過濾式防火牆
+
+B.
+iptables 、firewalld 
+
+C.
+iptables -[F|X|Z] (清除規則|自訂鏈|統計資訊)
+iptables -P [INPUT|OUTPUT|FORWARD] [ACCEPT|DROP]
+
+firewall-cmd --set-default-zone=[public|work|trusted|...] #選擇所要設定的領域
+firewall-cmd --permanent --add-service=[services name] #設定所要放行的服務 使用--permanent 可直接將設定加入設定檔
+firewall-cmd --reload #重新載入
+
+D.
+上課用到的是filter 表格(針對伺服器本機的管理行為)與nat 表格(針對透過伺服器作為 router 之用的網路管理行為 (如 IP 分享器等));
+針對本機的防火牆表格是 filter，INPUT, OUTPUT, FORWARD，因為是在課堂中屬於單純的伺服器環境下，只管制了INPUT 鏈，OUTPUT 及 FORWARD則直接放行，使用iptables指令增加規則以進行封包的過濾
+為了讓client端能順暢的使用外網則針對NAT(網路位址的轉換)做重導向，使用iptables指令修改 IP 封包的表頭資料（目標或來源的IP以及TCP 封包表頭的 port number）
+
+E.
+filter
+INPUT 、OUTPUT 
+
+F.
+man iptables-extensions
+
+G.
+iptables-save
+
+H.
+/etc/sysconfig/iptables
+
+I.
+iptables -A INPUT -s 192.168.0.0/16 -m tcp --dport 22 -j ACCEPT
+
+J.
+REJECT會返回一個拒絕的封包以明確拒絕對方的連線 而 DROP會直接丟棄對方的封包而不做出回應。
+
+K.
+(1)/etc/sysctl.conf
+(2)ip forward
+
+L.
+NAT 表格
+PREROUTING、POSTROUTING、OUTPUT
+
+M.
+修改來源位址 (source)稱為 SNAT 是PREROUTING鏈中在進行路由判斷之前所要進行的規則之一
+修改目標位址 (destination)稱為DNAT是POSTROUTING鏈中在進行路由判斷之後所要進行的規則之一
