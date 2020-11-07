@@ -1,27 +1,10 @@
-nmcli conn up ens3
-yum install bash-completion -y
-nmcli conn show ens3
-nmcli conn show ens3 | grep ^ipv4
-nmcli conn show ens3 | grep autoc
-nmcli conn show
-nmcli conn --help
-nmcli conn delete uuid a7* 96* 27*
-nmcli conn delete Wired connection 1
-nmcli conn delete 'Wired connection 1'
-nmcli conn show
-nmcli conn delete 'Wired connection 2'
+#網路參數的設定
 nmcli conn delete ens3
-nmcli conn show
-nmcli conn add con-name ens3 ifname ens3 ipv4.1
-nmcli conn show ens3 | grep autoc
-nmcli conn show 'Wired connection 1' | grep autoc
-nmcli conn show 'Wired connection 1' | grep ipv4
 nmcli conn add con-name ens3 ifname ens3 ipv4.method manual ipv4.addresses 172.18.255.128/24 ipv4.dns 172.16.200.254,168.95.1.1 ipv4.gateway 172.18.255.254 connection.autoconnect yes type ethernet
-nmcli conn show
-nmcli conn delete 'Wired connection 1'
 nmcli conn up ens3
+
+#yum 軟體倉儲
 vi /etc/yum.repos.d/CentOS-Base.repo 
-cat /etc/yum.repos.d/CentOS-Base.repo | grep ^baseurl
 cat /etc/yum.repos.d/CentOS-Base.repo | grep ^baseurl >> /etc/yum.repos.d/CentOS-Extras.repo 
 cat /etc/yum.repos.d/CentOS-Base.repo | grep ^baseurl >> /etc/yum.repos.d/CentOS-AppStream.repo 
 cat /etc/yum.repos.d/CentOS-Base.repo | grep ^baseurl >> /etc/yum.repos.d/CentOS-PowerTools.repo 
@@ -30,66 +13,48 @@ vi /etc/yum.repos.d/CentOS-AppStream.repo
 vi /etc/yum.repos.d/CentOS-PowerTools.repo 
 yum clean all
 yum update
-yum install vim-enhanced -y
+
+#下載vim、Tab補字
+yum install bash-completion vim-enhanced -y
+
 reboot 
-nmcli connection show 
-yum --enablerepo=PowerTools install elinks
-links http://127.0.0.1
-yum repolist all 
-yum install net-tools mailx wget bind-utils kernel-tools kernel-modules -y
+
+#下載軟體
+yum --enablerepo=PowerTools install links
+yum repolist all
+yum install net-tools mailx wget bind-utils kernel-tools kernel-modules iptables* rsync* -y
+
+#teamd 的機制建立內部區域網路的備援功能
 nmcli connection add con-name team0 ifname team0 type team config '{"runner":{"name":"activebackup"}}' ipv4.addresses 172.19.128.254/24 connection.autoconnect yes ipv4.method manual 
 nmcli connection add con-name ens7 ifname ens7 type team-slave 
 nmcli connection add con-name ens7 ifname ens7 type team-slave master team0 
 nmcli connection add con-name ens8 ifname ens8 type team-slave master team0 
+
+
 vim /etc/hosts
-vim /etc/crontab 
+
+
+vim /etc/crontab
+
+#主機名稱修改
 hostnamectl set-hostname server128.example.dic
+
+#下載啟動開機啟動iptables
 yum install iptables* -y
 systemctl start iptables.service 
 systemctl enable iptables.service 
+
 vim /root/firewall.sh
 iptables-save 
 iptables-save -t filter
 vim /root/firewall.sh
-iptables -A INPUT -p state --state DFCDCdsfsdfsdfsSSSFDsdfDFdfdfsdfsdfFFFFFFFFFFFfffffffffffffffffffffffffffddddDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDGGGGGGgggfGDGDFGDFGD
-reboot 
-iptable -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
-iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
-iptables -A INPUT -p icmp -j ACCEPT
-iptables --help
-iptables --help | grep -m
-iptables --help | grep '-m'
-iptables --help | grep 'm'
-iptables --help | grep 'state'
-iptables -A INPUT -s 172.
-cat /etc/hosts
-iptables -A INPUT -s 172.19.128.0/24 -j ACCEPT
-iptables -A INPUT -s 172.18.255.0/24 -p tcp --dport 22 -j ACCEPT
-iptable -A INPUT -p tcp -m tcp --dport 80 -j ACCEPT
-iptables -A INPUT -p tcp -m tcp --dport 80 -j ACCEPT
-history 20 >> firewall.sh 
-vim firewall.sh 
-sh -x firewall.sh 
-vim /proc/sys/net/ipv4/ip_forward
-cat /proc/sys/net/ipv4/ip_forward
+
+#讓核心支援 IP 轉遞的功能，並且每次重新開機都可以自動生效
 vim /etc/sysctl.conf 
 sysctl -p
 cat /proc/sys/net/ipv4/ip_forward
-iptables --help | grep '-t'
-iptables --help | grep 't'
-iptables --help | grep 't '
-iptables -t nat -F
-iptables -t nat -X
-iptables -t nat -Z
-iptables -t nat -A POSTROUTING -s 172.18.128.-o ens3
-cat /etc/hosts
-iptables -t nat -A POSTROUTING -s 172.18.255.128 -o ens3 -j MASQUERADE 
-history 15 >> firewall.sh 
-vim /etc/sysconfig/iptables-config 
-vim firewall.sh 
-sh -x firewall.sh 
-vim firewall.sh 
-vim /etc/sysconfig/iptables
+
+#內部私有 VLAN 的設定
 nmcli connection down team0 
 nmcli connection modify team0 ipv4.method disabled ipv4.addresses '' ipv6.method link-local ipv6.addresses ''
 nmcli connection add type vlan con-name vlan128 ifname vlan128 dev team0 id 128
