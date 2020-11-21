@@ -1,3 +1,4 @@
+#step1
 yum install wget -y
 wget -q https://repo.symas.com/configs/SOFL/rhel8/sofl.repo -O /etc/yum.repos.d/sofl.repo
 yum install symas-openldap-clients symas-openldap-servers
@@ -6,12 +7,11 @@ systemctl enable slapd.service
 netstat -tlunp | grep slapd
 
 mkdir ldap
-vim ldap/basedn.1dif
-scp root@192.168.254.200:/root/ldap/basedn.ldif /root/ldap/
-vim ldap/basedn.ldif
+slappasswd
+vim ldap/basedn.1dif #貼上設定slappasswd後所輸出的密碼({SSHA}XXXXXXXXXXXXXXXXXXXXX)
+scp root@192.168.254.200:/root/ldap/basedn.ldif /root/ldap/ #這邊是複製老師的檔案 可改成我的IP和路徑: root@192.168.254.128:/root/ldap/basedn.ldif
 cd ldap/
 ldapmodify -Y EXTERNAL  -H ldapi:/// -f basedn.ldif
-vim basedn.ldif
 
 cp /usr/share/openldap-servers/DB_CONFIG.example /var/lib/ldap/DB_CONFIG
 chown ldap:ldap /var/lib/ldap/DB_CONFIG 
@@ -38,25 +38,17 @@ grep ldapuser /etc/group > ldap/group.txt
 /usr/share/migrationtools/migrate_passwd.pl ldap/user.txt > ldap/user.ldif
 userdel -r ldapuser1 
 
-
-
-
-
 vim ldap/group.ldif 
-vim ldap/user..ldif 
 vim ldap/user.ldif 
 vim ldap/adduser.sh
-scp student@192.168.254.200:~student/add* ldap/
+scp student@192.168.254.200:~student/add* /root/ldap/ #這邊是複製老師的檔案 可改成我的IP和路徑: root@192.168.254.128:/root/ldap/adduser.sh
 vim ldap/adduser.sh 
-sh -x ldap/adduser.sh 
-ll ldap/
-ll /home/rhome/
-vim ldap/adduser.sh 
-vim ldap/ldapuser.ldif 
-vim ldap/ldapgroup.ldif 
-ldapadd -x -W -D "cn=Manager,di=dic,dc=ksu" -f /root/ldap/ldapuser.ldif 
-ldapadd -x -W -D "cn=Manager,di=dic,dc=ksu" -f /root/ldap/ldapgroup.ldif
-ldapsearch -x -H ldap://localhost -b 'dc=dic,dc=ksu'
-ldapsearch -x -H ldap://localhost -b 'dc=dic,dc=ksu uid=ldapuser10'
-history 
-poweroff 
+sh -x ldap/adduser.sh  #執行腳本大量建置 LDAP 帳號
+
+vim ldap/ldapuser.ldif #查看有沒有問題
+vim ldap/ldapgroup.ldif #查看有沒有問題
+
+ldapadd -x -W -D "cn=Manager,di=dic,dc=ksu" -f /root/ldap/ldapuser.ldif #分別載入帳號、群組資訊
+ldapadd -x -W -D "cn=Manager,di=dic,dc=ksu" -f /root/ldap/ldapgroup.ldif #分別載入帳號、群組資訊
+ldapsearch -x -H ldap://localhost -b 'dc=dic,dc=ksu'#以明碼方式查詢所有資料庫的內容
+ldapsearch -x -H ldap://localhost -b 'dc=dic,dc=ksu uid=ldapuser10'#只找出與 uid 為 ldapuser10 的資訊
