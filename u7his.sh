@@ -1,4 +1,4 @@
-#step1
+
 yum install wget -y
 wget -q https://repo.symas.com/configs/SOFL/rhel8/sofl.repo -O /etc/yum.repos.d/sofl.repo
 yum install symas-openldap-clients symas-openldap-servers
