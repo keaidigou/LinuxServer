@@ -929,6 +929,8 @@ vim ldap/group.txt
 vim ldap/user..txt 
 vim ldap/user.txt 
 vim ldap/user.ldif 
+
+#U8
 yum install samba samba-client samba-common -y
 cd /etc/samba/
 vim smb.conf
@@ -967,7 +969,6 @@ ll /srv/myproject
 ll -a /srv/myproject
 chgrp graduation /srv/myproject
 ll -a /srv/myproject
-chmod 070 /srv/myproject
 chmod 770 /srv/myproject
 ll -a /srv/myproject
 chmod 2770 /srv/myproject
