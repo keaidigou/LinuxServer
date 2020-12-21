@@ -13,7 +13,8 @@ echo 'net.ipv4.ip_forward = 1' >> /etc/sysctl.conf
 sysctl -p
 cat /proc/sys/net/ipv4/ip_forward
 
-cp LinuxServer/HU8/firewall.sh /root 
+cp LinuxServer/HU8/firewall.sh /root/
 cat LinuxServer/HU8/crontab > /etc/crontab
 cat LinuxServer/HU8/config > /etc/selinux/config 
 cat LinuxServer/HU8/hosts > /etc/hosts 
+sh /root/firewall.sh
