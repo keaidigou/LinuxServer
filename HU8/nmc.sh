@@ -7,7 +7,6 @@ nmcli connection modify team0 connection.autoconnect yes
 nmcli connection modify team0 ipv4.method manual 
 nmcli connection modify team0 ipv4.addresses 172.19.128.254/24
 nmcli connection modify team0 ipv4.method manual 
-nmcli connection show team0 
 nmcli connection up team0 
 nmcli connection up ens3
 echo 'baseurl=http://ftp.ksu.edu.tw/FTP/CentOS/8/BaseOS/x86_64/os/' >> /etc/yum.repos.d/CentOS-Base.repo 
