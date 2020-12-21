@@ -14,6 +14,6 @@ sysctl -p
 cat /proc/sys/net/ipv4/ip_forward
 
 cp LinuxServer/HU8/firewall.sh /root 
-echo LinuxServer/HU8/crontab > /etc/crontab
-echo LinuxServer/HU8/config > /etc/selinux/config 
-echo LinuxServer/HU8/hosts > /etc/hosts 
+cat LinuxServer/HU8/crontab > /etc/crontab
+cat LinuxServer/HU8/config > /etc/selinux/config 
+cat LinuxServer/HU8/hosts > /etc/hosts 
